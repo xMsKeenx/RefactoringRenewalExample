@@ -1,9 +1,28 @@
+using LegacyRenewalApp.Interfaces;
 using System;
 
 namespace LegacyRenewalApp
 {
     public class SubscriptionRenewalService
     {
+        private readonly  ICostumerRepository _costumerRepository;
+        private readonly ISubscriptionPlanRepository _subscriptionPlanRepository;
+        private readonly IRenewalServiceValidator _renewalServiceValidator;
+        private readonly IBillingGateway _billingGateway;
+        private readonly DiscountCalculator _discountCalculator;
+
+        public SubscriptionRenewalService()
+          : this(new CustomerRepository(), new SubscriptionPlanRepository(),new IRenewalServiceValidator()) { }
+
+        public SubscriptionRenewalService(ICostumerRepository costumerRepository, ISubscriptionPlanRepository subscriptionPlanRepository, IRenewalServiceValidator irenewalServiceValidator) { 
+            _costumerRepository = costumerRepository;
+            _subscriptionPlanRepository = subscriptionPlanRepository;
+            _renewalServiceValidator = irenewalServiceValidator;
+        }
+        
+
+
+
         public RenewalInvoice CreateRenewalInvoice(
             int customerId,
             string planCode,
@@ -12,6 +31,7 @@ namespace LegacyRenewalApp
             bool includePremiumSupport,
             bool useLoyaltyPoints)
         {
+            _renewalServiceValidator.Validate(customerId, planCode, seatCount, paymentMethod);
             if (customerId <= 0)
             {
                 throw new ArgumentException("Customer id must be positive");
