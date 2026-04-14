@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace LegacyRenewalApp.Interfaces
 {
-    public interface IBillingGateway
+    public interface ITaxCalculator
     {
-        void SaveInvoice(RenewalInvoice invoice);
-        void SendEmail(string email, string subject, string body);
+        decimal GetTaxRate(string country);
     }
 }
